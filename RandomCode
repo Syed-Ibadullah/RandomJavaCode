@@ -1,0 +1,144 @@
+import java.util.*;
+
+public class LibraryManagementSystem {
+    // Book Class
+    static class Book {
+        private String title;
+        private String author;
+        private boolean issued;
+
+        public Book(String title, String author) {
+            this.title = title;
+            this.author = author;
+            this.issued = false;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public boolean isIssued() {
+            return issued;
+        }
+
+        public void setIssued(boolean issued) {
+            this.issued = issued;
+        }
+
+        @Override
+        public String toString() {
+            return "Book Title: " + title + ", Author: " + author + ", Issued: " + (issued ? "Yes" : "No");
+        }
+    }
+
+    // Member Class
+    static class Member {
+        private String name;
+        private int id;
+
+        public Member(String name, int id) {
+            this.name = name;
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        @Override
+        public String toString() {
+            return "Member Name: " + name + ", ID: " + id;
+        }
+    }
+
+    // Library Class
+    static class Library {
+        private List<Book> books = new ArrayList<>();
+        private List<Member> members = new ArrayList<>();
+
+        public void start() {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Welcome to the Library Management System");
+            while (true) {
+                System.out.println("\nMenu:");
+                System.out.println("1. Add Book");
+                System.out.println("2. Issue Book");
+                System.out.println("3. Return Book");
+                System.out.println("4. View All Books");
+                System.out.println("5. Exit");
+                System.out.print("Enter your choice: ");
+                int choice = scanner.nextInt();
+                switch (choice) {
+                    case 1 -> addBook(scanner);
+                    case 2 -> issueBook(scanner);
+                    case 3 -> returnBook(scanner);
+                    case 4 -> viewBooks();
+                    case 5 -> {
+                        System.out.println("Thank you for using the system.");
+                        return;
+                    }
+                    default -> System.out.println("Invalid choice. Try again.");
+                }
+            }
+        }
+
+        private void addBook(Scanner scanner) {
+            scanner.nextLine(); // consume newline
+            System.out.print("Enter book title: ");
+            String title = scanner.nextLine();
+            System.out.print("Enter book author: ");
+            String author = scanner.nextLine();
+            books.add(new Book(title, author));
+            System.out.println("Book added successfully.");
+        }
+
+        private void issueBook(Scanner scanner) {
+            scanner.nextLine(); // consume newline
+            System.out.print("Enter book title to issue: ");
+            String title = scanner.nextLine();
+            for (Book book : books) {
+                if (book.getTitle().equalsIgnoreCase(title) && !book.isIssued()) {
+                    book.setIssued(true);
+                    System.out.println("Book issued successfully.");
+                    return;
+                }
+            }
+            System.out.println("Book not available or already issued.");
+        }
+
+        private void returnBook(Scanner scanner) {
+            scanner.nextLine(); // consume newline
+            System.out.print("Enter book title to return: ");
+            String title = scanner.nextLine();
+            for (Book book : books) {
+                if (book.getTitle().equalsIgnoreCase(title) && book.isIssued()) {
+                    book.setIssued(false);
+                    System.out.println("Book returned successfully.");
+                    return;
+                }
+            }
+            System.out.println("Book not found or not issued.");
+        }
+
+        private void viewBooks() {
+            if (books.isEmpty()) {
+                System.out.println("No books available in the library.");
+            } else {
+                System.out.println("Books in the library:");
+                for (Book book : books) {
+                    System.out.println(book);
+                }
+            }
+        }
+    }
+
+    // Main Method
+    public static void main(String[] args) {
+        Library library = new Library();
+        library.start();
+    }
+}
